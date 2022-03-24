@@ -5,6 +5,7 @@ import Tab from './Tab';
 
 const DragTabElement = SortableElement(({children, ...props}) => {
   return (
+    // @ts-ignore
     <Tab index={props.tabIndex} {...props}>
       {children}
     </Tab>
@@ -12,7 +13,7 @@ const DragTabElement = SortableElement(({children, ...props}) => {
 });
 
 type Props = {
-  children: React.Node
+  children: React.ReactNode
 };
 
 class DragTab extends React.PureComponent<Props> {
@@ -29,6 +30,6 @@ class DragTab extends React.PureComponent<Props> {
   }
 }
 
-DragTab.displayName = 'DragTab';
+// DragTab.displayName = 'DragTab';
 
 export default DragTab;

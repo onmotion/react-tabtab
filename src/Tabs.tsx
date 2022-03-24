@@ -1,12 +1,12 @@
 // @flow
-import * as React from 'react';
+import React from "react";
 
 type Props = {
   defaultIndex?: number,
-  activeIndex?: number,
+  activeIndex?: number | null,
   showModalButton?: number | boolean,
   showArrowButton?: 'auto' | boolean ,
-  ExtraButton?: React.Node,
+  ExtraButton?: React.ReactNode,
   onTabChange?: (event: any) => void,
   onTabSequenceChange?: (event: any) => void,
   onTabEdit?: (event: any) => void,
@@ -16,20 +16,20 @@ type Props = {
     Panel?: () => void,
     ActionButton?: () => void
   },
-  children: React.Element<*>
+  children: React.ReactElement
 };
 
 type State = {
   activeIndex: number
 };
 
-export default class Tabs extends React.Component<Props, State> {
+export class Tabs extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    (this: any).handleTabChange = this.handleTabChange.bind(this);
-    (this: any).handleTabSequence = this.handleTabSequence.bind(this);
-    (this: any).handleEdit = this.handleEdit.bind(this);
-    (this: any).state = {
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleTabSequence = this.handleTabSequence.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.state = {
       activeIndex: this.getActiveIndex(props)
     };
   }
@@ -58,7 +58,7 @@ export default class Tabs extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.activeIndex !== this.props.activeIndex) {
-      this.setState({activeIndex: nextProps.activeIndex});
+      this.setState({activeIndex: this.getActiveIndex(nextProps)});
     }
   }
 

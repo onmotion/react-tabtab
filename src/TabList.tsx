@@ -1,4 +1,4 @@
-// @flow
+// @ts-nocheck
 import * as React from 'react';
 import styled from 'styled-components';
 import invariant from 'invariant';
@@ -54,7 +54,7 @@ const ListScroll = styled.ul`
 
 const ActionButtonStyle = styled.div`
   height: 100%;
-  width ${buttonWidth}px;
+  width: ${buttonWidth}px;
   text-align: center;
   border: 1px solid #d9d9d9;
   border-bottom: 0;
@@ -90,9 +90,9 @@ const makeFoldButton = ActionButton => styled(ActionButton)`
 
 type Props = {
   customStyle: {
-    TabList: () => void,
-    Tab: () => void,
-    ActionButton: () => void
+    TabList: React.FC<Partial<Props>>,
+    Tab: JSX.Element,
+    ActionButton: JSX.Element
   },
   activeIndex: number,
   showArrowButton: 'auto' | boolean,
@@ -100,8 +100,9 @@ type Props = {
   handleTabChange: (event: any) => void,
   handleTabSequence: (event: any) => void,
   handleEdit: (event: any) => void,
-  ExtraButton: React.Element<*>,
-  children: React.ChildrenArray<*>
+  ExtraButton: React.ReactElement<'div'>,
+  children: React.ReactNode[],
+  hasExtraButton?: boolean
 };
 
 type State = {
@@ -112,25 +113,25 @@ type State = {
 
 export default class TabListComponent extends React.Component<Props, State> {
 
-  listContainer: React.ElementRef<any>;
-  rightArrowNode: React.ElementRef<any>;
-  leftArrowNode: React.ElementRef<any>;
-  listScroll: React.ElementRef<any>;
-  foldNode: React.ElementRef<any>;
-  tabRefs: Array<HTMLElement>;
+  listContainer: React.ElementRef<'div'>;
+  rightArrowNode: React.ElementRef<'div'>;
+  leftArrowNode: React.ElementRef<'div'>;
+  listScroll: React.ElementRef<'ul'>;
+  foldNode: React.ElementRef<'div'>;
+  tabRefs:  React.ElementRef<'div'>[];
   scrollPosition: number;
 
   constructor(props: Props) {
     super(props);
-    (this: any).handleScroll = this.handleScroll.bind(this);
-    (this: any).toggleModal = this.toggleModal.bind(this);
-    (this: any).renderTabs = this.renderTabs.bind(this);
-    (this: any).renderArrowButton = this.renderArrowButton.bind(this);
-    (this: any).isShowModalButton = this.isShowModalButton.bind(this);
-    (this: any).isShowArrowButton = this.isShowArrowButton.bind(this);
-    (this: any).scrollPosition = 0;
-    (this: any).tabRefs = [];
-    (this: any).state = {
+    this.handleScroll = this.handleScroll.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.renderTabs = this.renderTabs.bind(this);
+    this.renderArrowButton = this.renderArrowButton.bind(this);
+    this.isShowModalButton = this.isShowModalButton.bind(this);
+    this.isShowArrowButton = this.isShowArrowButton.bind(this);
+    this.scrollPosition = 0;
+    this.tabRefs = [];
+    this.state = {
       modalIsOpen: false,
       showArrowButton: false,
       showModalButton: false
@@ -170,7 +171,7 @@ export default class TabListComponent extends React.Component<Props, State> {
     }
   }
 
-  getTabNode(tab: any): React.ElementRef<any> {
+  getTabNode(tab: any): React.ElementRef<'div'> {
     if (tab.__INTERNAL_NODE) { // normal tab
       return tab.__INTERNAL_NODE;
     } else if (tab.__DRAG_TAB_INTERNAL_NODE) { // drag tab
@@ -179,7 +180,7 @@ export default class TabListComponent extends React.Component<Props, State> {
   }
 
   unifyScrollMax(width: number) {
-    return parseFloat((width / 3) * 2);
+    return (width / 3) * 2;
   }
 
   handleScroll(direction: 'right' | 'left') {
@@ -264,7 +265,7 @@ export default class TabListComponent extends React.Component<Props, State> {
     this.setState({showArrowButton});
   }
 
-  renderTabs(options?: any = {}, isModal?: boolean) {
+  renderTabs(options: any = {}, isModal?: boolean) {
     const {children, activeIndex, handleTabChange, handleEdit, customStyle} = this.props;
     const props = {
       handleTabChange,
@@ -292,7 +293,7 @@ export default class TabListComponent extends React.Component<Props, State> {
     ));
   }
 
-  renderArrowButton(ScrollButton: React.ComponentType<*>) {
+  renderArrowButton(ScrollButton: React.ComponentType<{}>) {
     const {showArrowButton} = this.state;
     if (showArrowButton) {
       return (
@@ -359,8 +360,6 @@ export default class TabListComponent extends React.Component<Props, State> {
     )
   }
 }
-
-TabListComponent.displayName = 'TabList';
 
 export {
   TabListStyle,

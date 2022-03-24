@@ -9,7 +9,7 @@ type Props = {
   handleTabSequence: (event: any) => void,
   handleTabChange: (event: any) => void,
   activeIndex: number,
-  children: React.Node
+  children: React.ReactNode
 };
 
 const DragTabContainer = SortableContainer(({children}) => {

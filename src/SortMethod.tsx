@@ -11,7 +11,7 @@ type Props = {
 export default class SortMethod extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
-    (this: any).onSortEnd = this.onSortEnd.bind(this);
+    this.onSortEnd = this.onSortEnd.bind(this);
   }
 
   onSortEnd({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) {

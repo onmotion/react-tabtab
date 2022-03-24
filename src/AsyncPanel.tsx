@@ -3,7 +3,7 @@ import * as React from 'react'
 import Panel from './Panel';
 
 type Props = {
-  loadContent: (cb: Function) => void,
+  loadContent: (cb: Function) => any,
   render: (data: any) => void,
   renderLoading: () => void,
   CustomPanelStyle: () => void,
@@ -26,8 +26,8 @@ export default class AsyncPanelComponent extends React.PureComponent<Props, Stat
 
   constructor(props: Props) {
     super(props);
-    (this: any).loadPanel = this.loadPanel.bind(this);
-    (this: any).cacheData = undefined;
+    this.loadPanel = this.loadPanel.bind(this);
+    this.cacheData = undefined;
     this.state = {
       isLoading: false,
       data: undefined
@@ -53,7 +53,7 @@ export default class AsyncPanelComponent extends React.PureComponent<Props, Stat
       });
       return;
     }
-    const callback = (err, data) => {
+    const callback = (err: any, data?: any) => {
       if (err) {
         console.log('React-Tabtab async panel error:', err);
       }
@@ -71,7 +71,7 @@ export default class AsyncPanelComponent extends React.PureComponent<Props, Stat
         (data) => callback(null, data),
         (err) => callback(err)
       );
-    }
+    }    
     if (!this.state.isLoading) {
       this.setState({isLoading: true});
     }

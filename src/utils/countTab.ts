@@ -1,5 +1,5 @@
-// @flow
-import * as React from 'react';
+// @ts-nocheck
+import React from 'react';
 import {isTab, isTabList} from './isType';
 
 function loopTabList(tabList, cb) {
@@ -10,7 +10,7 @@ function loopTabList(tabList, cb) {
   });
 }
 
-function deepLoop(children: React.ChildrenArray<any>, cb) {
+function deepLoop(children: React.ReactNode[], cb) {
   React.Children.forEach(children, child => {
     if (isTabList(child)) {
       if (child.props && child.props.children) {

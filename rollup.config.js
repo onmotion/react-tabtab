@@ -1,12 +1,11 @@
-// rollup.config.js
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import flow from 'rollup-plugin-flow';
-import uglify from 'rollup-plugin-uglify';
-import json from 'rollup-plugin-json';
-import visualizer from 'rollup-plugin-visualizer';
-import replace from 'rollup-plugin-replace';
-import commonjs from 'rollup-plugin-commonjs'
+import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
+import commonjs from '@rollup/plugin-commonjs'
+import nodeResolve from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
+import jsx from 'acorn-jsx';
+
+
 
 const path = 'dist/react-tabtab';
 
@@ -21,7 +20,7 @@ const globals = {
   'react-poppop': 'PopPop'
 };
 
-const external = Object.keys(globals);
+//const external = Object.keys(globals);
 
 const prod = process.env.PRODUCTION
 const esbundle = process.env.ESBUNDLE
@@ -32,50 +31,49 @@ if (prod) {
   output = {file: path + '.min.js', format: 'umd', name};
 } else if (esbundle) {
   console.log('Creating ES modules bundle...');
-  output = {file: path + '.es.js', format: 'es'};
+  output = {file: path + '.es.js', format: 'es', sourcemap: true};
 }
 
+const extensions = ['.js', '.ts', '.tsx'];
+
 const plugins = [
-  flow(),
+ 
   json(),
-  resolve({
-    browser: true
-  }),
+  
+  // resolve({
+  //   browser: true
+  // }),
+  nodeResolve({ extensions }),
   commonjs({
-    ignoreGlobal: true,
-    exclude: 'src/**'
+   // ignoreGlobal: true,
+   // exclude: 'src/**'
   }),
-  babel({
-    babelrc: false,
-    presets: [
-      ['es2015', { modules: false }],
-      'react'
-    ],
-    plugins: [
-      'transform-react-remove-prop-types',
-      'transform-flow-strip-types',
-      'transform-class-properties',
-      'transform-object-rest-spread',
-      'external-helpers'
-    ]
-  })
+  typescript({ tsconfig: './tsconfig.json' }),
+
 ];
 
 if (prod) {
   plugins.push(
-    uglify(),
-    visualizer({filename: './bundle-stats.html'}),
+   
     replace({
       'process.env.NODE_ENV': JSON.stringify(prod ? 'production' : 'development'),
     })
   );
 }
-export default {
-  input: 'src/index.js',
-  name,
-  external,
-  exports: 'named',
-  output,
-  plugins,
-  globals: globals,
+export default 
+{
+    input: 'src/index.ts',
+    external: Object.keys(globals),
+    output: output,
+    plugins: plugins,
+    acornInjectPlugins: [jsx()]
+  
+
+  // input: 'src/index.ts',
+  // name,
+  // external,
+  // exports: 'named',
+  // output,
+  // plugins,
+  // globals: globals,
 }
